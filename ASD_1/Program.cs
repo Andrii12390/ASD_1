@@ -5,18 +5,16 @@ class MultiwayMergeSort
 {
     static void Main(string[] args)
     {
-        int sizeMB = 10;
+        int sizeMB = 1024;
         string inputFilePath = "input.txt";
         CreateEmptyFiles();
         Console.WriteLine($"[Generating] input.txt {sizeMB}MB");
         GenerateFile(inputFilePath, sizeMB);
-
         Console.WriteLine("[Sorting]: start");
         Stopwatch stopwatch = new Stopwatch();
         stopwatch.Start();
 
         SplitInputFile(inputFilePath);
-
         bool sorted = false, mergeToB = true;
         do
         {
@@ -30,6 +28,10 @@ class MultiwayMergeSort
         Console.WriteLine($"[Sorting]: end in {stopwatch.ElapsedMilliseconds / 1000} seconds");
         PrintFirstElements();
         DeleteFiles();
+        //Console.ReadKey();
+        //Console.ReadKey();
+        //Console.ReadKey();
+        //Console.ReadKey();
     }
     static void SplitInputFile(string inputFilePath)
     {
@@ -116,9 +118,9 @@ class MultiwayMergeSort
         int[] currentValues = new int[3];
         bool[] hasMoreData = new bool[3];
 
-        using (var reader1 = new StreamReader($"{inputPrefix}1.txt"))
-        using (var reader2 = new StreamReader($"{inputPrefix}2.txt"))
-        using (var reader3 = new StreamReader($"{inputPrefix}3.txt"))
+        using (var reader1 = new StreamReader($"{inputPrefix}1.txt", Encoding.UTF8, true, 4096))
+        using (var reader2 = new StreamReader($"{inputPrefix}2.txt", Encoding.UTF8, true, 4096))
+        using (var reader3 = new StreamReader($"{inputPrefix}3.txt", Encoding.UTF8, true, 4096))
         {
             hasMoreData[0] = TryReadNextValue(reader1, out currentValues[0]);
             hasMoreData[1] = TryReadNextValue(reader2, out currentValues[1]);
@@ -130,7 +132,7 @@ class MultiwayMergeSort
             while (hasAnyMoreData)
             {
                 string outputFilePath = $"{outputPrefix}{currentIndex + 1}.txt";
-                using (var writer = new StreamWriter(outputFilePath, true))
+                using (var writer = new StreamWriter(outputFilePath, true, Encoding.UTF8, 4096))
                 {
                     bool seriesOpen = true;
 
@@ -174,7 +176,7 @@ class MultiwayMergeSort
     static void GenerateFile(string filePath, int sizeMB)
     {
         int targetSizeInBytes = sizeMB * 1024 * 1024;
-        long seriesBytes = 100 * 1024 * 1024;
+        long seriesBytes = 103 * 1024 * 1024;
         int currentSize = 0;
 
         Random random = new Random();
